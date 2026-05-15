@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Valuatum — Equity Research Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="report-styles-v2.css">
+</head>
+<body>
+
+<!-- =================================================================
+     reportData — single replaceable source of truth.
+     The rest of the document is data-driven.
+     ================================================================= -->
+<script src="report-data-v2.js"></script>
+
+<div class="paper">
+
+<!-- ============================================================
+     PAGE 1 — COVER
+     ============================================================ -->
+<section class="page page--cover" data-section="Cover">
+  <div class="cover-frame">
+    <div class="cover-top">
+      <div class="wordmark">
+        <span class="wordmark__mark">V</span>
+        <span class="wordmark__text">VALUATUM</span>
+      </div>
+      <div class="cover-top__meta">
+        <div class="kicker">Equity Research</div>
+        <div class="cover-top__date" data-bind="meta.reportDateLong">—</div>
+      </div>
+    </div>
+
+    <div class="cover-hero">
+      <div class="cover-hero__label">Equity Research Report</div>
+      <h1 class="cover-hero__company"><span data-bind="company.name">—</span></h1>
+      <div class="cover-hero__sub">
+        <span data-bind="company.ticker">—</span>
+        <span class="dot"></span>
+        <span data-bind="company.exchange">—</span>
+        <span class="dot"></span>
+        <span data-bind="company.sector">—</span>
+        <span class="dot"></span>
+        <span data-bind="company.country">—</span>
+      </div>
+    </div>
+
+    <div class="cover-grid">
+      <div class="cover-card cover-card--reco">
+        <div class="cover-card__label">Recommendation</div>
+        <div class="cover-card__value cover-card__value--reco" data-bind="reco.rating">—</div>
+        <div class="cover-card__foot">12-month horizon</div>
+      </div>
+      <div class="cover-card">
+        <div class="cover-card__label">Current price</div>
+        <div class="cover-card__value"><span data-bind="quote.price">—</span> <span class="ccy" data-bind="quote.currency">—</span></div>
+        <div class="cover-card__foot" data-bind="meta.priceAsOf">—</div>
+      </div>
+      <div class="cover-card">
+        <div class="cover-card__label">Target price</div>
+        <div class="cover-card__value"><span data-bind="reco.target">—</span> <span class="ccy" data-bind="quote.currency">—</span></div>
+        <div class="cover-card__foot">12m fundamental</div>
+      </div>
+      <div class="cover-card cover-card--upside">
+        <div class="cover-card__label">Implied upside</div>
+        <div class="cover-card__value" data-bind="reco.upsidePct">—</div>
+        <div class="cover-card__foot">vs. current price</div>
+      </div>
+      <div class="cover-card">
+        <div class="cover-card__label">Market cap</div>
+        <div class="cover-card__value" data-bind="quote.marketCap">—</div>
+        <div class="cover-card__foot">Implied by shares × price</div>
+      </div>
+      <div class="cover-card">
+        <div class="cover-card__label">Enterprise value</div>
+        <div class="cover-card__value" data-bind="quote.ev">—</div>
+        <div class="cover-card__foot">Mcap + net debt</div>
+      </div>
+    </div>
+
+    <div class="cover-strip">
+      <div><span class="cover-strip__k">P/E 2026E</span><span class="cover-strip__v" data-bind="mult.pe">—</span></div>
+      <div><span class="cover-strip__k">EV/EBITDA 2026E</span><span class="cover-strip__v" data-bind="mult.evEbitda">—</span></div>
+      <div><span class="cover-strip__k">FCF yield 2026E</span><span class="cover-strip__v" data-bind="mult.fcfYield">—</span></div>
+      <div><span class="cover-strip__k">Dividend yield 2026E</span><span class="cover-strip__v" data-bind="mult.divYield">—</span></div>
+      <div><span class="cover-strip__k">Net debt / EBITDA 2026E</span><span class="cover-strip__v" data-bind="mult.ndEbitda">—</span></div>
+    </div>
+
+    <div class="cover-foot">
+      <div class="cover-foot__rule"></div>
+      <div class="cover-foot__row">
+        <div class="cover-foot__brand">VALUATUM &nbsp;|&nbsp; EQUITY RESEARCH</div>
+        <div class="cover-foot__disclaim">Automatically generated. Not investment advice. Verify all figures independently.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE 2 — RESEARCH SNAPSHOT
+     Trimmed to 8 KPI cards (down from 12), with breathing room
+     for the thesis block below.
+     ============================================================ -->
+<section class="page" data-section="Research snapshot">
+  <header class="page-header">
+    <div class="page-header__left">VALUATUM</div>
+    <div class="page-header__center"><span data-bind="company.name">—</span> · <span data-bind="company.ticker">—</span></div>
+    <div class="page-header__right">RESEARCH SNAPSHOT</div>
+  </header>
+
+  <div class="page-body">
+    <div class="section-head">
+      <div class="section-head__num">02</div>
+      <div>
+        <div class="section-head__kicker">Research snapshot</div>
+        <h2 class="section-head__title">The call, the math, and the three reasons why</h2>
+        <p class="section-head__lead">This page is the institutional summary. Read it in 30 seconds — the rest of the report is the supporting evidence.</p>
+      </div>
+    </div>
+
+    <div class="snapshot-grid">
+      <div class="kpi kpi--accent">
+        <div class="kpi__label">Recommendation</div>
+        <div class="kpi__value" data-bind="reco.rating">—</div>
+        <div class="kpi__delta">prev. <span data-bind="reco.prevRating">—</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Target price</div>
+        <div class="kpi__value"><span data-bind="reco.target">—</span><span class="kpi__unit" data-bind="quote.currency">—</span></div>
+        <div class="kpi__delta">12-month fundamental</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Current price</div>
+        <div class="kpi__value"><span data-bind="quote.price">—</span><span class="kpi__unit" data-bind="quote.currency">—</span></div>
+        <div class="kpi__delta" data-bind="meta.priceAsOf">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Implied upside</div>
+        <div class="kpi__value" data-bind="reco.upsidePct">—</div>
+        <div class="kpi__delta">vs. current price</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Market capitalisation</div>
+        <div class="kpi__value" data-bind="quote.marketCap">—</div>
+        <div class="kpi__delta">implied by shares × price</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Enterprise value</div>
+        <div class="kpi__value" data-bind="quote.ev">—</div>
+        <div class="kpi__delta">mcap + net debt</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">P/E · EV/EBITDA 2026E</div>
+        <div class="kpi__value"><span data-bind="mult.pe">—</span> · <span data-bind="mult.evEbitda">—</span></div>
+        <div class="kpi__delta">forward forecast basis</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">FCF · Dividend yield 2026E</div>
+        <div class="kpi__value"><span data-bind="mult.fcfYield">—</span> · <span data-bind="mult.divYield">—</span></div>
+        <div class="kpi__delta" data-bind="mult.divDps">—</div>
+      </div>
+    </div>
+
+    <div class="thesis">
+      <div class="thesis__title">
+        <span class="bullet"></span>Investment case in three points
+      </div>
+      <ol class="thesis__list" data-list="thesis.reasons">
+        <!-- li injected -->
+      </ol>
+      <div class="thesis__breaker">
+        <div class="thesis__breaker-label">Thesis breaker</div>
+        <div class="thesis__breaker-text" data-bind="thesis.breaker">—</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <span>Valuatum  |  Equity Research  |  <span data-bind="company.name">—</span></span>
+    <span class="page-num">2 / —</span>
+  </footer>
+</section>
+
+<!-- Pages 3+ injected by report-render-v2.js -->
+<div id="dynamic-pages"></div>
+
+</div><!-- /.paper -->
+
+<script src="report-charts-v2.js"></script>
+<script src="report-render-v2.js"></script>
+</body>
+</html>
