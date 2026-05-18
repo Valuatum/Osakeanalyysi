@@ -400,23 +400,23 @@ window.reportData = {
     insightPage1: "The reverse valuation does not require a step-change in revenue. Net sales only need to move from the current trough toward a modest long-term growth path. The valuation question is therefore not whether UPM can become a structurally faster-growing company, but whether margins can normalize as pulp, energy and specialty materials recover.",
     insightPage2: "To justify the current price, UPM does not need materially higher revenue growth. It needs a recovery in profitability: EBITDA margin must normalize from the 2025 trough of 10.6% toward 20.8% by 2035E, while EBIT margin must recover from 4.5% to 12.9%. This requires pulp pricing, energy contribution and cost discipline to offset structural decline in Communication Papers.",
     historicalYears: [
-      { year: "2021A", netSales:  9814, ebitdaMargin: 20.6, ebitMargin: 15.9, fcfMargin: -11.7 },
-      { year: "2022A", netSales: 11720, ebitdaMargin: 20.8, ebitMargin: 16.8, fcfMargin: -16.8 },
-      { year: "2023A", netSales: 10460, ebitdaMargin: 11.0, ebitMargin:  5.8, fcfMargin:  21.2 },
-      { year: "2024A", netSales: 10339, ebitdaMargin: 16.4, ebitMargin:  5.8, fcfMargin:   2.3 },
-      { year: "2025A", netSales:  9656, ebitdaMargin: 10.6, ebitMargin:  4.5, fcfMargin:  14.1 }
+      { year: "2021A", netSales:  9814, ebitdaMargin: 20.6, ebitMargin: 15.9, fcfMargin: -11.7, roi: 12.8 },
+      { year: "2022A", netSales: 11720, ebitdaMargin: 20.8, ebitMargin: 16.8, fcfMargin: -16.8, roi: 12.7 },
+      { year: "2023A", netSales: 10460, ebitdaMargin: 11.0, ebitMargin:  5.8, fcfMargin:  21.2, roi:  3.8 },
+      { year: "2024A", netSales: 10339, ebitdaMargin: 16.4, ebitMargin:  5.8, fcfMargin:   2.3, roi:  4.1 },
+      { year: "2025A", netSales:  9656, ebitdaMargin: 10.6, ebitMargin:  4.5, fcfMargin:  14.1, roi:  5.4 }
     ],
     marketImpliedYears: [
-      { year: "2026E", netSales:  9861, ebitdaMargin: 19.4, ebitMargin:  9.3, fcfMargin: 11.6 },
-      { year: "2027E", netSales: 10099, ebitdaMargin: 18.7, ebitMargin:  9.2, fcfMargin:  9.6 },
-      { year: "2028E", netSales: 10336, ebitdaMargin: 18.0, ebitMargin:  9.1, fcfMargin:  7.7 },
-      { year: "2029E", netSales: 10574, ebitdaMargin: 17.4, ebitMargin:  9.0, fcfMargin:  5.9 },
-      { year: "2030E", netSales: 10812, ebitdaMargin: 16.8, ebitMargin:  8.9, fcfMargin:  4.2 },
-      { year: "2031E", netSales: 11154, ebitdaMargin: 17.7, ebitMargin:  9.8, fcfMargin:  4.8 },
-      { year: "2032E", netSales: 11496, ebitdaMargin: 18.6, ebitMargin: 10.6, fcfMargin:  5.4 },
-      { year: "2033E", netSales: 11838, ebitdaMargin: 19.4, ebitMargin: 11.4, fcfMargin:  6.0 },
-      { year: "2034E", netSales: 12180, ebitdaMargin: 20.1, ebitMargin: 12.2, fcfMargin:  6.6 },
-      { year: "2035E", netSales: 12522, ebitdaMargin: 20.8, ebitMargin: 12.9, fcfMargin:  7.1 }
+      { year: "2026E", netSales:  9861, ebitdaMargin: 19.4, ebitMargin:  9.3, fcfMargin: 11.6, roi:  6.6 },
+      { year: "2027E", netSales: 10099, ebitdaMargin: 18.7, ebitMargin:  9.2, fcfMargin:  9.6, roi:  8.9 },
+      { year: "2028E", netSales: 10336, ebitdaMargin: 18.0, ebitMargin:  9.1, fcfMargin:  7.7, roi:  9.0 },
+      { year: "2029E", netSales: 10574, ebitdaMargin: 17.4, ebitMargin:  9.0, fcfMargin:  5.9, roi:  6.3 },
+      { year: "2030E", netSales: 10812, ebitdaMargin: 16.8, ebitMargin:  8.9, fcfMargin:  4.2, roi:  7.1 },
+      { year: "2031E", netSales: 11154, ebitdaMargin: 17.7, ebitMargin:  9.8, fcfMargin:  4.8, roi:  7.9 },
+      { year: "2032E", netSales: 11496, ebitdaMargin: 18.6, ebitMargin: 10.6, fcfMargin:  5.4, roi:  8.7 },
+      { year: "2033E", netSales: 11838, ebitdaMargin: 19.4, ebitMargin: 11.4, fcfMargin:  6.0, roi:  9.5 },
+      { year: "2034E", netSales: 12180, ebitdaMargin: 20.1, ebitMargin: 12.2, fcfMargin:  6.6, roi: 10.2 },
+      { year: "2035E", netSales: 12522, ebitdaMargin: 20.8, ebitMargin: 12.9, fcfMargin:  7.1, roi: 10.2 }
     ],
     summary: {
       historicalNetSalesCAGR: -0.004,

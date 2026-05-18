@@ -722,6 +722,14 @@ makePage({
               <td class="num">${fmtP(year10.fcfMargin)}</td>
               <td class="dim">Supported by capex discipline</td>
             </tr>` : ''}
+            <tr>
+              <td><b>ROI</b></td>
+              <td class="num">${fmtP(lastActual.roi)}</td>
+              <td class="num">${fmtP(year1.roi)}</td>
+              <td class="num">${fmtP(year5.roi)}</td>
+              <td class="num">${fmtP(year10.roi)}</td>
+              <td class="dim">Return on capital must normalize</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -787,7 +795,7 @@ makePage({
           <div class="rv-req-card__accent">The main hurdle</div>
           <div class="rv-req-card__number">EBIT margin: ${fmtP(lastActual.ebitMargin)} → ${fmtP(year10.ebitMargin)}</div>
           <div class="rv-req-card__body">The key requirement is margin recovery. EBITDA margin must recover from ${fmtP(lastActual.ebitdaMargin)} in 2025A to ${fmtP(year10.ebitdaMargin)} by 2035E, while EBIT margin must recover from ${fmtP(lastActual.ebitMargin)} to ${fmtP(year10.ebitMargin)}. This requires normalized pulp profitability, stable Energy earnings and no permanent deterioration in specialty materials margins.</div>
-          <div class="rv-req-card__dataline">EBITDA margin: ${fmtP(lastActual.ebitdaMargin)} → ${fmtP(year10.ebitdaMargin)} &nbsp;·&nbsp; EBIT margin: ${fmtP(lastActual.ebitMargin)} → ${fmtP(year10.ebitMargin)}</div>
+          <div class="rv-req-card__dataline">EBITDA margin: ${fmtP(lastActual.ebitdaMargin)} → ${fmtP(year10.ebitdaMargin)} &nbsp;·&nbsp; EBIT margin: ${fmtP(lastActual.ebitMargin)} → ${fmtP(year10.ebitMargin)} &nbsp;·&nbsp; ROI: must recover from ${fmtP(lastActual.roi)} in 2025A to ${fmtP(year10.roi)} by 2035E</div>
         </div>
 
         <div class="rv-req-card">
@@ -840,6 +848,12 @@ makePage({
               <td class="num">${fmtP(lastActual.fcfMargin)} in 2025A</td>
               <td class="num">${fmtP(year10.fcfMargin)} by 2035E</td>
               <td class="dim">Cash discipline must remain positive</td>
+            </tr>
+            <tr>
+              <td><b>ROI</b></td>
+              <td class="num">${fmtP(lastActual.roi)} in 2025A</td>
+              <td class="num">${fmtP(year10.roi)} by 2035E</td>
+              <td class="dim">Confirms margin recovery also earns adequate return on capital</td>
             </tr>
           </tbody>
         </table>
