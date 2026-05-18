@@ -182,7 +182,7 @@ function comboBars(container, opts) {
     const t = el('text', { x: x + 5, y: padT + 11,
       'font-family': 'Inter, sans-serif', 'font-size': 8.5, fill: '#6b7470',
       'letter-spacing': '0.10em', 'text-transform': 'uppercase', 'font-weight': 600 }, svg);
-    t.textContent = 'Forecast';
+    t.textContent = opts.estLabel || 'Forecast';
   }
 
   // Gridlines from nice ticks

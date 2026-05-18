@@ -1,7 +1,7 @@
 /* =================================================================
    Valuatum Equity Research v2 — prose-first render
    - Share price development page added (page 3)
-   - Reverse valuation replaced with DCF before/after analytical layout (pages 13–14)
+   - Reverse valuation: market-implied growth and profitability path (pages 13–14)
    - All other pages shifted +1 in section numbering
    ================================================================= */
 
@@ -518,174 +518,345 @@ makePage({
 });
 
 // ===============================================================
-// Page 13 — Reverse Valuation I: DCF bridge + forecast adjustments
+// Page 13 — Reverse Valuation I: Market-implied growth path
 // ===============================================================
 (function () {
-  const rv       = D.reverseValuation || {};
-  const callout  = rv.callout        || {};
-  const bridge   = rv.bridge         || [];
-  const fa       = rv.forecastAdj    || {};
-  const faRows   = fa.rows           || [];
-  const nearYear = fa.nearYear       || '2026E';
-  const farYear  = fa.farYear        || '2035E';
+  const rv   = D.reverseValuation      || {};
+  const hist = rv.historicalYears      || [];
+  const impl = rv.marketImpliedYears   || [];
+  const sum  = rv.summary              || {};
 
-  function fmtAdj(v) {
-    if (v == null || v === '') return '—';
-    if (typeof v === 'number') return F(v);
-    return v;
-  }
-  function isChanged(nb, na, fb, fa_) {
-    const nc = nb != null && na != null && nb !== na;
-    const fc = fb != null && fa_ != null && fb !== fa_;
-    return nc || fc;
+  const allYears = [...hist, ...impl];
+  const labels   = allYears.map(y => y.year);
+  const netSales = allYears.map(y => y.netSales);
+  const estStart = hist.length;
+
+  function fmtCAGR(v) {
+    const pct = (v * 100);
+    return (pct >= 0 ? '+' : '') + pct.toFixed(1) + '% p.a.';
   }
 
-  const bridgeRows = bridge.map(r => `
-    <tr>
-      <td><b>${r.metric}</b></td>
-      <td class="num">${r.beforeLabel || '—'}</td>
-      <td class="num">${r.afterLabel  || '—'}</td>
-      <td class="num neg"><b>${r.changeLabel || '—'}</b></td>
-    </tr>
-  `).join('');
-
-  const forecastRows = faRows.map(r => {
-    const changed = isChanged(r.nearBefore, r.nearAfter, r.farBefore, r.farAfter);
-    const cls     = changed ? 'is-changed' : 'is-same';
-    return `
-      <tr>
-        <td><b>${r.metric}</b></td>
-        <td class="num">${fmtAdj(r.nearBefore)}</td>
-        <td class="num ${cls}">${fmtAdj(r.nearAfter)}</td>
-        <td class="num">${fmtAdj(r.farBefore)}</td>
-        <td class="num ${cls}">${fmtAdj(r.farAfter)}</td>
-        <td class="dim" style="font-size:8.5pt;">${r.interp || ''}</td>
-      </tr>
-    `;
-  }).join('');
+  const lastActual = hist[hist.length - 1] || {};
+  const sum_histCAGR = sum.historicalNetSalesCAGR || 0;
+  const sum_implCAGR = sum.impliedNetSalesCAGR    || 0;
 
   makePage({
     section: 'Reverse valuation', num: '13',
-    kicker: 'Reverse valuation · 1 of 2',
-    title: 'What must change for the model to match the market price?',
-    lead: 'Reverse valuation is a bridge from the original DCF model to the market-implied model. It identifies which assumptions the market is adjusting — and crucially, which ones it is leaving unchanged.',
+    kicker: 'Reverse valuation · 1 of 3',
+    title: 'Reverse valuation — what the current price requires',
+    lead: 'The current share price is translated into an implied operating path. The focus is not on the original DCF model, but on the growth and profitability required for the current valuation to hold.',
     bodyHTML: `
-      ${callout.title ? `
-      <div class="rv-callout-card">
-        <div class="rv-callout-card__label">Key finding</div>
-        <div class="rv-callout-card__title">${callout.title}</div>
-        ${callout.body ? `<div class="rv-callout-card__body">${callout.body}</div>` : ''}
-      </div>` : ''}
-
-      <div class="table-card" style="margin-bottom:4mm;">
-        <div class="table-card__title">Fair value bridge — DCF model vs. market-implied</div>
-        <table class="dtable">
-          <thead>
-            <tr>
-              <th>Metric</th>
-              <th class="num">Before (DCF model)</th>
-              <th class="num">After (market-implied)</th>
-              <th class="num">Change</th>
-            </tr>
-          </thead>
-          <tbody>${bridgeRows}</tbody>
-        </table>
-        <div class="table-card__note">Before = original DCF model. After = model anchored to current market price. Values in EUR/share or EURm as labelled.</div>
+      <div class="rv-callout-card" style="margin-bottom:3.5mm;">
+        <div class="rv-callout-card__label">Market insight</div>
+        <div class="rv-callout-card__title">${rv.mainMessage || ''}</div>
       </div>
 
-      <div class="table-card">
-        <div class="table-card__title">Forecast adjustments — ${nearYear} and ${farYear}</div>
-        <table class="dtable dtable--rv-forecast">
-          <thead>
-            <tr>
-              <th>Metric</th>
-              <th class="num">${nearYear} Before</th>
-              <th class="num">${nearYear} After</th>
-              <th class="num">${farYear} Before</th>
-              <th class="num">${farYear} After</th>
-              <th>Interpretation</th>
-            </tr>
-          </thead>
-          <tbody>${forecastRows}</tbody>
-        </table>
-        <div class="table-card__note">Highlighted cells show where the market-implied model diverges from the original forecast. EURm unless otherwise stated.</div>
+      <div class="rv-kpi-strip">
+        <div class="kpi">
+          <div class="kpi__label">Current share price</div>
+          <div class="kpi__value">${rv.currentPrice || '—'}<span class="kpi__unit">${rv.currency || ''}</span></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__label">Price-implied value anchor</div>
+          <div class="kpi__value">${rv.marketImpliedFairValuePerShare || '—'}<span class="kpi__unit">${rv.currency || ''}</span></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__label">Historical net sales CAGR 2021–2025</div>
+          <div class="kpi__value">${fmtCAGR(sum_histCAGR)}</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__label">Implied net sales CAGR 2026–2035</div>
+          <div class="kpi__value">${fmtCAGR(sum_implCAGR)}</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__label">Terminal implied EBIT margin 2035E</div>
+          <div class="kpi__value">${(sum.terminalImpliedEBITMargin || 0).toFixed(1)}<span class="kpi__unit">%</span></div>
+        </div>
       </div>
-    `
-  });
-})();
+      <div class="rv-strip-note">This is not Valuatum's target price. It is the operating path implied by the current share price in the reverse valuation model.</div>
 
-// ===============================================================
-// Page 14 — Reverse Valuation II: margin compression + unchanged
-// ===============================================================
-(function () {
-  const rv        = D.reverseValuation || {};
-  const ms        = rv.marginSeries    || {};
-  const unchanged = rv.unchanged       || [];
-  const hasMargin = ms.years && ms.years.length > 0;
-
-  const unchangedHtml = unchanged.map(item =>
-    `<div class="checklist__item">${item}</div>`
-  ).join('');
-
-  makePage({
-    section: 'Reverse valuation', num: '14',
-    kicker: 'Reverse valuation · 2 of 2',
-    title: 'Margin compression path and unchanged assumptions',
-    lead: 'The market-implied model compresses long-term profitability while leaving capital structure, growth and capital expenditure broadly unchanged.',
-    bodyHTML: `
-      <div class="bridge-single">
-        <div class="chart-card">
-          <div class="chart-card__title">Margin compression — before vs. after reverse valuation</div>
-          <div class="chart-card__sub">EBITDA and EBIT margins, % of net sales · original model (solid) vs. market-implied model (dashed)</div>
-          ${hasMargin
-            ? `<div id="chart-margin-rv" class="chart-card__body"></div>`
-            : `<div style="display:flex;align-items:center;justify-content:center;height:60mm;color:var(--c-muted);font-size:9pt;">Margin series data unavailable</div>`
-          }
+      <div class="bridge-single" style="margin-bottom:0;">
+        <div class="chart-card" style="height:112mm;margin-bottom:0;">
+          <div class="chart-card__title">Net sales — historical and market-implied</div>
+          <div class="chart-card__sub">EUR million · 2021A–2025A actual, 2026E–2035E market-implied</div>
+          <div id="chart-rv-netsales" class="chart-card__body"></div>
+          <div class="rv-cagr-labels">
+            <div class="rv-cagr-labels__item">
+              <span class="rv-cagr-labels__period">Historical CAGR 2021–2025</span>
+              <span class="rv-cagr-labels__value">${fmtCAGR(sum_histCAGR)}</span>
+            </div>
+            <div class="rv-cagr-labels__divider">vs.</div>
+            <div class="rv-cagr-labels__item rv-cagr-labels__item--implied">
+              <span class="rv-cagr-labels__period">Market-implied CAGR 2026–2035</span>
+              <span class="rv-cagr-labels__value rv-cagr-labels__value--accent">${fmtCAGR(sum_implCAGR)}</span>
+            </div>
+          </div>
           <div class="legend">
-            <span><span class="legend__sw legend__sw--primary"></span>EBITDA margin (before)</span>
-            <span><span class="legend__sw" style="background:rgba(18,53,43,0.45);border:1px dashed #1a4a3b;display:inline-block;width:10px;height:10px;margin-right:4px;vertical-align:-1px;"></span>EBITDA margin (after)</span>
-            <span><span class="legend__sw legend__sw--alt"></span>EBIT margin (before)</span>
-            <span><span class="legend__sw" style="background:rgba(138,163,154,0.45);border:1px dashed #8aa39a;display:inline-block;width:10px;height:10px;margin-right:4px;vertical-align:-1px;"></span>EBIT margin (after)</span>
+            <span><span class="legend__sw legend__sw--primary"></span>Net sales — Actual</span>
+            <span><span class="legend__sw legend__sw--est"></span>Net sales — Market-implied (dashed)</span>
           </div>
         </div>
       </div>
 
-      <div class="checklist" style="margin-top:5mm;">
-        <div class="checklist__title">What did not change</div>
-        <div class="checklist__items">${unchangedHtml}</div>
-        <div class="checklist__note">Because these items are broadly unchanged, the market-implied haircut should be read as a profitability and return-on-capital haircut, not as a lower-growth case.</div>
+      <div class="rv-insight-para">${rv.insightPage1 || ''}</div>
+
+      <div class="rv-classification-badge">
+        Reverse valuation type: <b>${rv.classificationLabel || '—'}</b>
       </div>
     `
   });
 
-  if (hasMargin) {
-    setTimeout(() => {
-      const c = document.getElementById('chart-margin-rv');
-      if (!c) return;
-      window.VC.comboBars(c, {
-        labels: ms.years,
-        w: 900, h: 310,
-        yFmt: v => v.toFixed(0) + '%',
-        series: [
-          { name: 'EBITDA before', kind: 'line', color: '#12352b', values: ms.ebitdaBefore },
-          { name: 'EBITDA after',  kind: 'line', color: '#12352b', values: ms.ebitdaAfter,  dashed: true },
-          { name: 'EBIT before',   kind: 'line', color: '#8aa39a', values: ms.ebitBefore },
-          { name: 'EBIT after',    kind: 'line', color: '#8aa39a', values: ms.ebitAfter,    dashed: true }
-        ]
-      });
-    }, 0);
-  }
+  setTimeout(() => {
+    const c = document.getElementById('chart-rv-netsales');
+    if (!c) return;
+    window.VC.comboBars(c, {
+      labels,
+      w: 900, h: 340,
+      estStart,
+      estLabel: 'Market-implied',
+      yFmt: v => window.VC.fmt(v),
+      series: [
+        { name: 'Net sales', kind: 'line', color: '#12352b', values: netSales }
+      ]
+    });
+  }, 0);
 })();
 
 // ===============================================================
-// 15. Financial bridge I — revenue, EBITDA/EBIT, margin
+// Page 14 — Reverse Valuation II: Market-implied profitability path
+// ===============================================================
+(function () {
+  const rv   = D.reverseValuation      || {};
+  const hist = rv.historicalYears      || [];
+  const impl = rv.marketImpliedYears   || [];
+  const sum  = rv.summary              || {};
+
+  const allYears   = [...hist, ...impl];
+  const labels     = allYears.map(y => y.year);
+  const ebitdaMarg = allYears.map(y => y.ebitdaMargin);
+  const ebitMarg   = allYears.map(y => y.ebitMargin);
+  const estStart   = hist.length;
+
+  const lastActual = hist[hist.length - 1] || {};
+  const year1      = impl[0]               || {};
+  const year5      = impl[4]               || {};
+  const year10     = impl[impl.length - 1] || {};
+
+  function fmtP(v) { return v != null ? v.toFixed(1) + '%' : '—'; }
+  function fmtM(v) { return v != null ? F(v) : '—'; }
+
+  const hasFCF = lastActual.fcfMargin != null && year1.fcfMargin != null;
+
+  makePage({
+    section: 'Reverse valuation', num: '14',
+    kicker: 'Reverse valuation · 2 of 3',
+    title: 'Market-implied profitability path',
+    lead: 'Reverse valuation translates the current share price into the EBITDA and EBIT margins the company must achieve over the next decade.',
+    bodyHTML: `
+      <div class="bridge-single" style="margin-bottom:0;">
+        <div class="chart-card" style="height:118mm;margin-bottom:3mm;">
+          <div class="chart-card__title">EBITDA margin and EBIT margin — historical and market-implied</div>
+          <div class="chart-card__sub">% of net sales · 2021A–2025A actual, 2026E–2035E market-implied · actual = solid, market-implied = dashed</div>
+          <div id="chart-rv-margins" class="chart-card__body"></div>
+          <div class="legend">
+            <span><span class="legend__sw legend__sw--primary"></span>EBITDA margin — Actual</span>
+            <span><span class="legend__sw legend__sw--alt"></span>EBIT margin — Actual</span>
+            <span><span class="legend__sw" style="background:rgba(18,53,43,0.40);border:1px dashed #12352b;display:inline-block;width:10px;height:10px;margin-right:4px;vertical-align:-1px;"></span>EBITDA margin — Market-implied</span>
+            <span><span class="legend__sw" style="background:rgba(138,163,154,0.40);border:1px dashed #8aa39a;display:inline-block;width:10px;height:10px;margin-right:4px;vertical-align:-1px;"></span>EBIT margin — Market-implied</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rv-path-note">Reverse valuation path, not base forecast. These figures show what the current price requires, not Valuatum's base case forecast.</div>
+
+      <div class="table-card" style="margin-bottom:3.5mm;">
+        <div class="table-card__title">Required operating path</div>
+        <table class="dtable dtable--rv-path">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num">${lastActual.year || '2025A'}<br><span style="font-weight:400;font-size:7.5pt;opacity:0.75;">Last actual</span></th>
+              <th class="num">${year1.year || '2026E'}<br><span style="font-weight:400;font-size:7.5pt;opacity:0.75;">Year 1</span></th>
+              <th class="num">${year5.year || '2030E'}<br><span style="font-weight:400;font-size:7.5pt;opacity:0.75;">Year 5</span></th>
+              <th class="num">${year10.year || '2035E'}<br><span style="font-weight:400;font-size:7.5pt;opacity:0.75;">Year 10</span></th>
+              <th>Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Net sales (EURm)</b></td>
+              <td class="num">${fmtM(lastActual.netSales)}</td>
+              <td class="num">${fmtM(year1.netSales)}</td>
+              <td class="num">${fmtM(year5.netSales)}</td>
+              <td class="num">${fmtM(year10.netSales)}</td>
+              <td class="dim">Modest long-term recovery</td>
+            </tr>
+            <tr>
+              <td><b>Net sales CAGR</b></td>
+              <td class="num">${((sum.historicalNetSalesCAGR || 0) * 100).toFixed(1)}%<br><span style="font-size:7.5pt;color:var(--c-muted);">2021–25</span></td>
+              <td class="num" colspan="3" style="text-align:right;">${((sum.impliedNetSalesCAGR || 0) * 100 >= 0 ? '+' : '') + ((sum.impliedNetSalesCAGR || 0) * 100).toFixed(1)}% p.a.<br><span style="font-size:7.5pt;color:var(--c-muted);">2026–2035</span></td>
+              <td class="dim">Well below 2022 peak</td>
+            </tr>
+            <tr>
+              <td><b>EBITDA margin</b></td>
+              <td class="num">${fmtP(lastActual.ebitdaMargin)}</td>
+              <td class="num">${fmtP(year1.ebitdaMargin)}</td>
+              <td class="num">${fmtP(year5.ebitdaMargin)}</td>
+              <td class="num">${fmtP(year10.ebitdaMargin)}</td>
+              <td class="dim">Material profitability recovery</td>
+            </tr>
+            <tr>
+              <td><b>EBIT margin</b></td>
+              <td class="num">${fmtP(lastActual.ebitMargin)}</td>
+              <td class="num">${fmtP(year1.ebitMargin)}</td>
+              <td class="num">${fmtP(year5.ebitMargin)}</td>
+              <td class="num">${fmtP(year10.ebitMargin)}</td>
+              <td class="dim">Recovery from 2025 trough</td>
+            </tr>
+            ${hasFCF ? `
+            <tr>
+              <td><b>FCF margin</b></td>
+              <td class="num">${fmtP(lastActual.fcfMargin)}</td>
+              <td class="num">${fmtP(year1.fcfMargin)}</td>
+              <td class="num">${fmtP(year5.fcfMargin)}</td>
+              <td class="num">${fmtP(year10.fcfMargin)}</td>
+              <td class="dim">Supported by capex discipline</td>
+            </tr>` : ''}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rv-path-note" style="margin-top:1.5mm;">The 2030 margin dip reflects the modelled market-implied path and should not be read as a separate strategic forecast. The key message is the required recovery from 2025 trough profitability toward a low-teens EBIT margin by 2035.</div>
+    `
+  });
+
+  setTimeout(() => {
+    const c = document.getElementById('chart-rv-margins');
+    if (!c) return;
+    window.VC.comboBars(c, {
+      labels,
+      w: 900, h: 350,
+      estStart,
+      estLabel: 'Market-implied',
+      yFmt: v => v.toFixed(0) + '%',
+      series: [
+        { name: 'EBITDA margin', kind: 'line', color: '#12352b', values: ebitdaMarg },
+        { name: 'EBIT margin',   kind: 'line', color: '#8aa39a', values: ebitMarg   }
+      ]
+    });
+  }, 0);
+})();
+
+// ===============================================================
+// Page 15 — Reverse Valuation III: What must happen
+// ===============================================================
+(function () {
+  const rv   = D.reverseValuation      || {};
+  const hist = rv.historicalYears      || [];
+  const impl = rv.marketImpliedYears   || [];
+  const sum  = rv.summary              || {};
+
+  const lastActual = hist[hist.length - 1] || {};
+  const year1      = impl[0]               || {};
+  const year5      = impl[4]               || {};
+  const year10     = impl[impl.length - 1] || {};
+
+  function fmtP(v) { return v != null ? v.toFixed(1) + '%' : '—'; }
+  function fmtM(v) { return v != null ? F(v) : '—'; }
+
+  const implCagr = '+' + ((sum.impliedNetSalesCAGR || 0) * 100).toFixed(1);
+
+  makePage({
+    section: 'Reverse valuation', num: '15',
+    kicker: 'Reverse valuation · 3 of 3',
+    title: 'What must happen for the current price to be justified',
+    lead: 'The reverse valuation result is not a high-growth case. For UPM, the current price is justified mainly if profitability normalizes. Net sales only need to grow modestly, but margins must recover materially from the 2025 trough and cash conversion must remain disciplined.',
+    bodyHTML: `
+      <div class="rv-req-cards">
+
+        <div class="rv-req-card">
+          <div class="rv-req-card__label">Growth requirement</div>
+          <div class="rv-req-card__accent">Modest</div>
+          <div class="rv-req-card__number">Net sales: 9.7bn EUR → 12.5bn EUR</div>
+          <div class="rv-req-card__body">Market-implied net sales CAGR is only +2.7%&nbsp;p.a. from 2026E to 2035E. The current price does not require a structural growth acceleration or a return to 2022 peak revenue. Growth only needs to normalize gradually from the trough.</div>
+          <div class="rv-req-card__dataline">2025A: ${fmtM(lastActual.netSales)}&nbsp;EURm &nbsp;·&nbsp; 2035E: ${fmtM(year10.netSales)}&nbsp;EURm &nbsp;·&nbsp; CAGR 2026–2035: ${implCagr}%&nbsp;p.a.</div>
+        </div>
+
+        <div class="rv-req-card rv-req-card--highlight">
+          <div class="rv-req-card__label">Profitability requirement</div>
+          <div class="rv-req-card__accent">The main hurdle</div>
+          <div class="rv-req-card__number">EBIT margin: ${fmtP(lastActual.ebitMargin)} → ${fmtP(year10.ebitMargin)}</div>
+          <div class="rv-req-card__body">The key requirement is margin recovery. EBITDA margin must recover from ${fmtP(lastActual.ebitdaMargin)} in 2025A to ${fmtP(year10.ebitdaMargin)} by 2035E, while EBIT margin must recover from ${fmtP(lastActual.ebitMargin)} to ${fmtP(year10.ebitMargin)}. This requires normalized pulp profitability, stable Energy earnings and no permanent deterioration in specialty materials margins.</div>
+          <div class="rv-req-card__dataline">EBITDA margin: ${fmtP(lastActual.ebitdaMargin)} → ${fmtP(year10.ebitdaMargin)} &nbsp;·&nbsp; EBIT margin: ${fmtP(lastActual.ebitMargin)} → ${fmtP(year10.ebitMargin)}</div>
+        </div>
+
+        <div class="rv-req-card">
+          <div class="rv-req-card__label">Cash discipline requirement</div>
+          <div class="rv-req-card__accent">No new capex shock</div>
+          <div class="rv-req-card__number">FCF margin remains positive</div>
+          <div class="rv-req-card__body">The implied path assumes that free cash flow remains positive through the forecast period. The market is not only underwriting higher EBIT; it is also assuming that capex, working capital and balance sheet discipline do not absorb the profitability recovery.</div>
+          <div class="rv-req-card__dataline">FCF margin: 2025A ${fmtP(lastActual.fcfMargin)} &nbsp;·&nbsp; 2026E ${fmtP(year1.fcfMargin)} &nbsp;·&nbsp; 2035E ${fmtP(year10.fcfMargin)}</div>
+        </div>
+
+      </div>
+
+      <div class="rv-interp-box">
+        <div class="rv-interp-box__label">Reverse valuation type: profitability-led</div>
+        <div class="rv-interp-box__body">For UPM, reverse valuation says the market is not asking for a new growth story. It is asking for a recovery in operating margins. If net sales follow the modest implied growth path but EBIT margin fails to recover toward low-teens levels, the current price is not supported. If margins normalize broadly in line with the implied path, the current price is defensible even without aggressive revenue growth.</div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-card__title">Summary: what the current price requires</div>
+        <table class="dtable dtable--rv-summary">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num">Current / trough</th>
+              <th class="num">Required by 2035E</th>
+              <th>Why it matters</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Net sales</b></td>
+              <td class="num">${fmtM(lastActual.netSales)} EURm in 2025A</td>
+              <td class="num">${fmtM(year10.netSales)} EURm by 2035E</td>
+              <td class="dim">Growth requirement is modest</td>
+            </tr>
+            <tr>
+              <td><b>EBITDA margin</b></td>
+              <td class="num">${fmtP(lastActual.ebitdaMargin)} in 2025A</td>
+              <td class="num">${fmtP(year10.ebitdaMargin)} by 2035E</td>
+              <td class="dim">Main operating recovery requirement</td>
+            </tr>
+            <tr>
+              <td><b>EBIT margin</b></td>
+              <td class="num">${fmtP(lastActual.ebitMargin)} in 2025A</td>
+              <td class="num">${fmtP(year10.ebitMargin)} by 2035E</td>
+              <td class="dim">Core profitability test</td>
+            </tr>
+            <tr>
+              <td><b>FCF margin</b></td>
+              <td class="num">${fmtP(lastActual.fcfMargin)} in 2025A</td>
+              <td class="num">${fmtP(year10.fcfMargin)} by 2035E</td>
+              <td class="dim">Cash discipline must remain positive</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `
+  });
+})();
+
+// ===============================================================
+// 16. Financial bridge I — revenue, EBITDA/EBIT, margin
 // ===============================================================
 (function () {
   const labels   = D.years.map(y => y.y + (y.kind === 'E' ? 'E' : ''));
   const estStart = D.years.findIndex(y => y.kind === 'E');
 
   makePage({
-    section: 'Financial bridge', num: '15',
+    section: 'Financial bridge', num: '16',
     kicker: 'Financial bridge · 1 of 2',
     title: 'Revenue, EBITDA / EBIT and margin development',
     lead: 'Net sales held above 9.5 bn EUR through the trough. EBITDA fell more than 50% to FY25 lows then rebuilds to a normalised 2.0–2.1 bn EUR range from 2026E onward. EBIT margin recovers to low-teens, in line with the through-cycle band.',
@@ -740,14 +911,14 @@ makePage({
 })();
 
 // ===============================================================
-// 16. Financial bridge II — FCF, leverage + summary table
+// 17. Financial bridge II — FCF, leverage + summary table
 // ===============================================================
 (function () {
   const labels   = D.years.map(y => y.y + (y.kind === 'E' ? 'E' : ''));
   const estStart = D.years.findIndex(y => y.kind === 'E');
 
   makePage({
-    section: 'Financial bridge', num: '16',
+    section: 'Financial bridge', num: '17',
     kicker: 'Financial bridge · 2 of 2',
     title: 'Free cash flow, leverage and key financials',
     lead: 'Free cash flow oscillated through the capex cycle and stabilises at 600–1,300 EUR m from 2026E. Net debt / EBITDA peaks at 3.0× exiting 2025 and falls back below 1.5× across the forecast, restoring balance-sheet flexibility.',
@@ -812,7 +983,7 @@ makePage({
 })();
 
 // ===============================================================
-// 17. Multiples + Sensitivity
+// 18. Multiples + Sensitivity
 // ===============================================================
 (function () {
   const m    = D.multiples;
@@ -856,7 +1027,7 @@ makePage({
   }).join('');
 
   makePage({
-    section: 'Multiples & sensitivity', num: '17',
+    section: 'Multiples & sensitivity', num: '18',
     kicker: 'Valuation multiples &amp; sensitivity',
     title: 'Forward multiples and EBITDA × EV/EBITDA sensitivity',
     lead: 'Forward multiples normalise from 2027E onward as forecasts move closer to through-cycle. The sensitivity matrix tests valuation against the two biggest assumptions — operating earnings and the multiple applied.',
@@ -889,7 +1060,7 @@ makePage({
 })();
 
 // ===============================================================
-// 18. Scenario Valuation
+// 19. Scenario Valuation
 // ===============================================================
 (function () {
   const rows = D.scenarios.map(s => {
@@ -914,7 +1085,7 @@ makePage({
   }).join('');
 
   makePage({
-    section: 'Scenario valuation', num: '18',
+    section: 'Scenario valuation', num: '19',
     kicker: 'Scenario valuation',
     title: 'Bear / Base / Bull — implied equity value per share',
     lead: 'We frame the scenarios around the pulp price path. Probability-weighting them on roughly 25/55/20 produces an expected value close to the base case target.',
@@ -949,7 +1120,7 @@ makePage({
 })();
 
 // ===============================================================
-// 19. Catalysts page
+// 20. Catalysts page
 // ===============================================================
 (function () {
   const timingTag = t => {
@@ -967,7 +1138,7 @@ makePage({
   `).join('');
 
   makePage({
-    section: 'Catalysts', num: '19',
+    section: 'Catalysts', num: '20',
     kicker: 'Catalysts',
     title: 'Monitoring checklist for the next 12 months',
     lead: 'Catalysts are ordered by timing. We treat near-term events (Q1 print, dividend resolution) as the highest-information moments for the recovery thesis.',
@@ -990,7 +1161,7 @@ makePage({
 })();
 
 // ===============================================================
-// 20. Risks page
+// 21. Risks page
 // ===============================================================
 (function () {
   const impactTag = i => {
@@ -1013,7 +1184,7 @@ makePage({
   `).join('');
 
   makePage({
-    section: 'Risks', num: '20',
+    section: 'Risks', num: '21',
     kicker: 'Key risks',
     title: 'Risk register with thresholds and severity',
     lead: 'Each risk has a quantitative trip-wire. Reaching one alone does not break the thesis but should trigger a review; the thesis breaks only on simultaneous pulp price and Nordic power downside shocks.',
@@ -1130,19 +1301,19 @@ makePage({
   `;
 
   makePage({
-    section: 'Appendix · Income statement', num: '21',
+    section: 'Appendix · Income statement', num: '22',
     kicker: 'Financial statements appendix',
     title: 'Income statement — annual 2022A–2028E',
     bodyHTML: `<div class="table-card">${isHtml}<div class="table-card__note">Values in EUR million unless noted. Per-share values in EUR.</div></div>`
   });
   makePage({
-    section: 'Appendix · Balance sheet', num: '22',
+    section: 'Appendix · Balance sheet', num: '23',
     kicker: 'Financial statements appendix',
     title: 'Balance sheet — annual 2022A–2025A',
     bodyHTML: `<div class="table-card">${bsHtml}<div class="table-card__note">Forward years not modelled for full balance sheet; only Net debt and Net debt / EBITDA forecasts shown.</div></div>`
   });
   makePage({
-    section: 'Appendix · Cash flow', num: '23',
+    section: 'Appendix · Cash flow', num: '24',
     kicker: 'Financial statements appendix',
     title: 'Cash flow statement — annual 2022A–2028E',
     bodyHTML: `<div class="table-card">${cfHtml}<div class="table-card__note">Forward free cash flow is modelled; other lines are reported actuals.</div></div>`
@@ -1173,7 +1344,7 @@ makePage({
     </table>
   `;
   makePage({
-    section: 'Appendix · Quarterly', num: '24',
+    section: 'Appendix · Quarterly', num: '25',
     kicker: 'Financial statements appendix',
     title: 'Quarterly snapshot — ' + q.period,
     bodyHTML: `<div class="table-card">${qHtml}<div class="table-card__note">Q4 25 includes exceptional financial income of 360 EUR m and exceptionally weak operating contribution.</div></div>`
@@ -1181,7 +1352,7 @@ makePage({
 })();
 
 // ===============================================================
-// 25. Sources + Disclaimer
+// 26. Sources + Disclaimer
 // ===============================================================
 (function () {
   const rows = D.sources.map(s => `
@@ -1194,7 +1365,7 @@ makePage({
   `).join('');
 
   makePage({
-    section: 'Sources & disclaimer', num: '25',
+    section: 'Sources & disclaimer', num: '26',
     kicker: 'Sources, assumptions and disclaimer',
     title: 'Provenance of figures and important caveats',
     bodyHTML: `

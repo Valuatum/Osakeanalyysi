@@ -920,8 +920,10 @@ html, body {
 .price-stat__note  { font-size: 7.5pt; color: var(--c-muted); margin-top: 1mm; }
 
 /* ===============================================================
-   REVERSE VALUATION — analytical layout
+   REVERSE VALUATION — market-implied operating path layout
    =============================================================== */
+
+/* Dark insight card (used for the main message and "what must happen") */
 .rv-callout-card {
   background: var(--c-primary);
   color: #fff;
@@ -930,45 +932,216 @@ html, body {
   page-break-inside: avoid;
 }
 .rv-callout-card__label { font-size: 7.5pt; letter-spacing: 0.20em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 1.5mm; }
-.rv-callout-card__title { font-size: 11pt; font-weight: 700; color: var(--c-accent); margin-bottom: 2mm; line-height: 1.3; }
+.rv-callout-card__title { font-size: 10.5pt; font-weight: 700; color: var(--c-accent); line-height: 1.4; }
 .rv-callout-card__body  { font-size: 9pt; color: rgba(255,255,255,0.88); line-height: 1.55; }
 
-/* Reverse valuation forecast table */
-.dtable--rv-forecast { table-layout: fixed; }
-.dtable--rv-forecast thead th { background: var(--c-primary); color: rgba(255,255,255,0.85); white-space: normal; line-height: 1.25; }
-.dtable--rv-forecast tbody td { font-size: 9pt; }
-.dtable--rv-forecast thead th:nth-child(1), .dtable--rv-forecast tbody td:nth-child(1) { width: 20%; }
-.dtable--rv-forecast thead th:nth-child(2), .dtable--rv-forecast tbody td:nth-child(2) { width: 14%; }
-.dtable--rv-forecast thead th:nth-child(3), .dtable--rv-forecast tbody td:nth-child(3) { width: 14%; }
-.dtable--rv-forecast thead th:nth-child(4), .dtable--rv-forecast tbody td:nth-child(4) { width: 14%; }
-.dtable--rv-forecast thead th:nth-child(5), .dtable--rv-forecast tbody td:nth-child(5) { width: 14%; }
-.dtable--rv-forecast thead th:nth-child(6), .dtable--rv-forecast tbody td:nth-child(6) { width: 24%; }
-.dtable--rv-forecast td.is-changed { color: var(--c-neg); font-weight: 600; }
-.dtable--rv-forecast td.is-same    { color: var(--c-muted); }
-.dtable--rv-forecast tbody td:nth-child(1) { white-space: normal; overflow-wrap: break-word; }
+/* 5-column KPI strip */
+.rv-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2.5mm;
+  margin-bottom: 3.5mm;
+}
+.rv-kpi-strip .kpi {
+  min-height: 17mm;
+  padding: 2.5mm 3mm;
+}
+.rv-kpi-strip .kpi__label {
+  font-size: 7pt;
+}
+.rv-kpi-strip .kpi__value {
+  font-size: 11.5pt;
+}
 
-/* "What did not change" checklist */
-.checklist {
+/* CAGR annotation strip below the net sales chart */
+.rv-cagr-labels {
+  display: flex;
+  align-items: center;
+  gap: 6mm;
+  margin-top: 2.5mm;
+  margin-bottom: 1.5mm;
+  padding: 2mm 3mm;
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+}
+.rv-cagr-labels__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5mm;
+}
+.rv-cagr-labels__period {
+  font-size: 7.5pt;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+.rv-cagr-labels__value {
+  font-size: 10.5pt;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text);
+}
+.rv-cagr-labels__value--accent { color: var(--c-primary); }
+.rv-cagr-labels__divider {
+  font-size: 8pt;
+  color: var(--c-muted);
+  padding: 0 2mm;
+}
+
+/* Interpretation paragraph below the net sales chart */
+.rv-insight-para {
+  font-size: 9pt;
+  color: var(--c-text);
+  line-height: 1.6;
+  margin-top: 3mm;
+  margin-bottom: 2.5mm;
+}
+
+/* Classification badge */
+.rv-classification-badge {
+  display: inline-block;
+  font-size: 8pt;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--c-primary);
   border: 1px solid var(--c-border);
   background: var(--c-card);
+  padding: 1.5mm 3mm;
+  margin-top: 1mm;
+}
+
+/* KPI strip disclaimer note */
+.rv-strip-note {
+  font-size: 7.5pt;
+  color: var(--c-muted);
+  font-style: italic;
+  margin-top: -1mm;
+  margin-bottom: 3mm;
+  line-height: 1.5;
+}
+
+/* Reverse valuation path / footnote note */
+.rv-path-note {
+  font-size: 7.5pt;
+  color: var(--c-muted);
+  font-style: italic;
+  border-left: 2px solid var(--c-border);
+  padding-left: 3mm;
+  margin-bottom: 2mm;
+  line-height: 1.5;
+}
+
+/* Three requirement cards — page 3 of RV */
+.rv-req-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3.5mm;
+  margin-bottom: 4.5mm;
+}
+.rv-req-card {
+  border: 1px solid var(--c-border);
+  background: #fff;
+  padding: 4.5mm 5mm;
+  page-break-inside: avoid;
+  display: flex;
+  flex-direction: column;
+  gap: 2mm;
+}
+.rv-req-card--highlight {
+  border-color: var(--c-primary);
+  border-width: 1.5px;
+  background: var(--c-card);
+}
+.rv-req-card__label {
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-primary);
+  font-weight: 700;
+  padding-bottom: 2mm;
+  border-bottom: 1px solid var(--c-border);
+}
+.rv-req-card__accent {
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--c-muted);
+  font-weight: 600;
+}
+.rv-req-card__number {
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.rv-req-card--highlight .rv-req-card__number { color: var(--c-primary); }
+.rv-req-card__body {
+  font-size: 8pt;
+  color: var(--c-text);
+  line-height: 1.55;
+  flex: 1;
+}
+.rv-req-card__dataline {
+  margin-top: auto;
+  padding-top: 2.5mm;
+  border-top: 1px dashed var(--c-border);
+  font-size: 7.5pt;
+  color: var(--c-muted);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* Interpretation box — page 3 of RV */
+.rv-interp-box {
+  border: 1px solid var(--c-border);
+  border-left: 3px solid var(--c-primary);
+  background: var(--c-card);
   padding: 4mm 5mm;
+  margin-bottom: 3.5mm;
   page-break-inside: avoid;
 }
-.checklist__title {
-  font-size: 8pt; letter-spacing: 0.20em; text-transform: uppercase;
-  color: var(--c-primary); font-weight: 700; margin-bottom: 3mm;
-  padding-bottom: 2mm; border-bottom: 1px solid var(--c-border);
+.rv-interp-box__label {
+  font-size: 7.5pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-primary);
+  font-weight: 700;
+  margin-bottom: 2mm;
 }
-.checklist__items { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5mm 10mm; }
-.checklist__item {
-  font-size: 9pt; color: var(--c-text);
-  display: flex; align-items: center; gap: 5px;
+.rv-interp-box__body {
+  font-size: 9pt;
+  color: var(--c-text);
+  line-height: 1.6;
 }
-.checklist__item::before { content: "✓"; color: var(--c-pos); font-weight: 700; font-size: 9.5pt; flex-shrink: 0; }
-.checklist__note {
-  margin-top: 3mm; padding-top: 2.5mm; border-top: 1px solid var(--c-border);
-  font-size: 8.5pt; color: var(--c-muted); line-height: 1.5; font-style: italic;
+
+/* RV summary table */
+.dtable--rv-summary { table-layout: fixed; }
+.dtable--rv-summary thead th { background: var(--c-primary); color: rgba(255,255,255,0.85); }
+.dtable--rv-summary tbody td { font-size: 9pt; }
+.dtable--rv-summary thead th:nth-child(1), .dtable--rv-summary tbody td:nth-child(1) { width: 18%; }
+.dtable--rv-summary thead th:nth-child(2), .dtable--rv-summary tbody td:nth-child(2) { width: 26%; }
+.dtable--rv-summary thead th:nth-child(3), .dtable--rv-summary tbody td:nth-child(3) { width: 26%; }
+.dtable--rv-summary thead th:nth-child(4), .dtable--rv-summary tbody td:nth-child(4) { width: 30%; }
+
+/* Required operating path table */
+.dtable--rv-path { table-layout: fixed; }
+.dtable--rv-path thead th {
+  background: var(--c-primary);
+  color: rgba(255,255,255,0.85);
+  white-space: normal;
+  line-height: 1.3;
 }
+.dtable--rv-path tbody td { font-size: 9pt; }
+.dtable--rv-path thead th:nth-child(1), .dtable--rv-path tbody td:nth-child(1) { width: 22%; }
+.dtable--rv-path thead th:nth-child(2), .dtable--rv-path tbody td:nth-child(2) { width: 13%; }
+.dtable--rv-path thead th:nth-child(3), .dtable--rv-path tbody td:nth-child(3) { width: 13%; }
+.dtable--rv-path thead th:nth-child(4), .dtable--rv-path tbody td:nth-child(4) { width: 13%; }
+.dtable--rv-path thead th:nth-child(5), .dtable--rv-path tbody td:nth-child(5) { width: 13%; }
+.dtable--rv-path thead th:nth-child(6), .dtable--rv-path tbody td:nth-child(6) { width: 26%; }
+.dtable--rv-path tbody td:nth-child(1) { white-space: normal; overflow-wrap: break-word; }
 
 /* ===============================================================
    PRINT

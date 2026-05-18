@@ -387,45 +387,44 @@ window.reportData = {
     }
   },
 
-  // --- Reverse valuation — DCF model vs. market-implied ---
+  // --- Reverse valuation — market-implied operating path ---
   reverseValuation: {
-    callout: {
-      title: "Market-implied adjustment: lower profitability, not lower growth.",
-      body: "Reverse valuation reduces the DCF fair value from 35.8 EUR/share to 25.3 EUR/share. Net sales, growth, capex and balance sheet assumptions remain broadly unchanged; the adjustment comes mainly through lower EBIT/EBITDA margins and lower free cash flow."
-    },
-    bridge: [
-      { metric: "DCF fair value / share",      beforeLabel: "35.8 EUR",      afterLabel: "25.3 EUR",      changeLabel: "−10.5 EUR"   },
-      { metric: "Equity value",                beforeLabel: "18,866 EURm",   afterLabel: "13,316 EURm",   changeLabel: "−5,550 EURm" },
-      { metric: "DCF / discounted FCFF value", beforeLabel: "22,389 EURm",   afterLabel: "16,847 EURm",   changeLabel: "−5,542 EURm" },
-      { metric: "Discounted EVA value",        beforeLabel: "8,747 EURm",    afterLabel: "3,205 EURm",    changeLabel: "−5,542 EURm" }
+    companyName: "UPM-Kymmene",
+    ticker: "UPM.HE",
+    currency: "EUR",
+    currentPrice: 25.18,
+    marketImpliedFairValuePerShare: 25.3,
+    classification: "profitability_led",
+    classificationLabel: "Profitability-led",
+    mainMessage: "Market-implied case: profitability recovery, not aggressive growth. The current price does not require a major acceleration in net sales. It requires EBITDA and EBIT margins to recover from the 2025 trough and remain structurally above the depressed 2023–2025 level.",
+    insightPage1: "The reverse valuation does not require a step-change in revenue. Net sales only need to move from the current trough toward a modest long-term growth path. The valuation question is therefore not whether UPM can become a structurally faster-growing company, but whether margins can normalize as pulp, energy and specialty materials recover.",
+    insightPage2: "To justify the current price, UPM does not need materially higher revenue growth. It needs a recovery in profitability: EBITDA margin must normalize from the 2025 trough of 10.6% toward 20.8% by 2035E, while EBIT margin must recover from 4.5% to 12.9%. This requires pulp pricing, energy contribution and cost discipline to offset structural decline in Communication Papers.",
+    historicalYears: [
+      { year: "2021A", netSales:  9814, ebitdaMargin: 20.6, ebitMargin: 15.9, fcfMargin: -11.7 },
+      { year: "2022A", netSales: 11720, ebitdaMargin: 20.8, ebitMargin: 16.8, fcfMargin: -16.8 },
+      { year: "2023A", netSales: 10460, ebitdaMargin: 11.0, ebitMargin:  5.8, fcfMargin:  21.2 },
+      { year: "2024A", netSales: 10339, ebitdaMargin: 16.4, ebitMargin:  5.8, fcfMargin:   2.3 },
+      { year: "2025A", netSales:  9656, ebitdaMargin: 10.6, ebitMargin:  4.5, fcfMargin:  14.1 }
     ],
-    forecastAdj: {
-      nearYear: "2026E",
-      farYear:  "2035E",
-      rows: [
-        { metric: "Net sales (EURm)",       nearBefore:  9861, nearAfter:  9861, farBefore: 12522, farAfter: 12522, interp: "No material change"      },
-        { metric: "EBITDA (EURm)",          nearBefore:  2122, nearAfter:  1915, farBefore:  2996, farAfter:  2610, interp: "Lower profitability"      },
-        { metric: "EBIT (EURm)",            nearBefore:  1127, nearAfter:   920, farBefore:  2005, farAfter:  1620, interp: "Lower profitability"      },
-        { metric: "EBITDA margin",          nearBefore: "21.5%", nearAfter: "19.4%", farBefore: "23.9%", farAfter: "20.8%", interp: "Margin haircut"  },
-        { metric: "EBIT margin",            nearBefore: "11.4%", nearAfter: "9.3%",  farBefore: "16.0%", farAfter: "12.9%", interp: "Margin haircut"  },
-        { metric: "Free cash flow (EURm)",  nearBefore:  1309, nearAfter:  1140, farBefore:  1201, farAfter:   888, interp: "Lower operating cash"    },
-        { metric: "ROI",                    nearBefore:  null, nearAfter:  null, farBefore: "12.6%", farAfter: "10.3%", interp: "Lower return on capital" },
-        { metric: "ROE",                    nearBefore:  null, nearAfter:  null, farBefore: "12.9%", farAfter: "10.8%", interp: "Lower shareholder return" }
-      ]
-    },
-    // Margin series 2026E–2035E for the compression chart
-    marginSeries: {
-      years:        ["2026E","2027E","2028E","2029E","2030E","2031E","2032E","2033E","2034E","2035E"],
-      ebitdaBefore: [21.5, 22.0, 22.5, 22.8, 23.0, 23.2, 23.4, 23.6, 23.8, 23.9],
-      ebitdaAfter:  [19.4, 19.8, 20.2, 20.4, 20.6, 20.7, 20.8, 20.8, 20.8, 20.8],
-      ebitBefore:   [11.4, 12.5, 13.2, 14.0, 14.6, 14.9, 15.3, 15.6, 15.8, 16.0],
-      ebitAfter:    [ 9.3, 10.2, 10.8, 11.4, 11.7, 12.0, 12.4, 12.6, 12.8, 12.9]
-    },
-    unchanged: [
-      "Net sales", "Net sales growth", "Tangible assets", "Gross capex",
-      "Interest-bearing liabilities", "Balance sheet total",
-      "Capex as % of revenue", "Depreciation",
-      "Working capital assumptions", "Share count"
-    ]
+    marketImpliedYears: [
+      { year: "2026E", netSales:  9861, ebitdaMargin: 19.4, ebitMargin:  9.3, fcfMargin: 11.6 },
+      { year: "2027E", netSales: 10099, ebitdaMargin: 18.7, ebitMargin:  9.2, fcfMargin:  9.6 },
+      { year: "2028E", netSales: 10336, ebitdaMargin: 18.0, ebitMargin:  9.1, fcfMargin:  7.7 },
+      { year: "2029E", netSales: 10574, ebitdaMargin: 17.4, ebitMargin:  9.0, fcfMargin:  5.9 },
+      { year: "2030E", netSales: 10812, ebitdaMargin: 16.8, ebitMargin:  8.9, fcfMargin:  4.2 },
+      { year: "2031E", netSales: 11154, ebitdaMargin: 17.7, ebitMargin:  9.8, fcfMargin:  4.8 },
+      { year: "2032E", netSales: 11496, ebitdaMargin: 18.6, ebitMargin: 10.6, fcfMargin:  5.4 },
+      { year: "2033E", netSales: 11838, ebitdaMargin: 19.4, ebitMargin: 11.4, fcfMargin:  6.0 },
+      { year: "2034E", netSales: 12180, ebitdaMargin: 20.1, ebitMargin: 12.2, fcfMargin:  6.6 },
+      { year: "2035E", netSales: 12522, ebitdaMargin: 20.8, ebitMargin: 12.9, fcfMargin:  7.1 }
+    ],
+    summary: {
+      historicalNetSalesCAGR: -0.004,
+      impliedNetSalesCAGR: 0.027,
+      latestActualEBITDAMargin: 10.6,
+      terminalImpliedEBITDAMargin: 20.8,
+      latestActualEBITMargin: 4.5,
+      terminalImpliedEBITMargin: 12.9
+    }
   }
 };
