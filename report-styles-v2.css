@@ -1035,17 +1035,17 @@ html, body {
 .rv-req-cards {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 3.5mm;
-  margin-bottom: 4.5mm;
+  gap: 2.5mm;
+  margin-bottom: 3mm;
 }
 .rv-req-card {
   border: 1px solid var(--c-border);
   background: #fff;
-  padding: 4.5mm 5mm;
+  padding: 3mm 4mm;
   page-break-inside: avoid;
   display: flex;
   flex-direction: column;
-  gap: 2mm;
+  gap: 1.5mm;
 }
 .rv-req-card--highlight {
   border-color: var(--c-primary);
@@ -1058,7 +1058,7 @@ html, body {
   text-transform: uppercase;
   color: var(--c-primary);
   font-weight: 700;
-  padding-bottom: 2mm;
+  padding-bottom: 1.5mm;
   border-bottom: 1px solid var(--c-border);
 }
 .rv-req-card__accent {
@@ -1099,8 +1099,8 @@ html, body {
   border: 1px solid var(--c-border);
   border-left: 3px solid var(--c-primary);
   background: var(--c-card);
-  padding: 4mm 5mm;
-  margin-bottom: 3.5mm;
+  padding: 3mm 4mm;
+  margin-bottom: 3mm;
   page-break-inside: avoid;
 }
 .rv-interp-box__label {

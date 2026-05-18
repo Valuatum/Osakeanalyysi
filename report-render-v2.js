@@ -654,7 +654,7 @@ makePage({
     lead: 'Reverse valuation translates the current share price into the EBITDA and EBIT margins the company must achieve over the next decade.',
     bodyHTML: `
       <div class="bridge-single" style="margin-bottom:0;">
-        <div class="chart-card" style="height:118mm;margin-bottom:3mm;">
+        <div class="chart-card" style="height:96mm;margin-bottom:2mm;">
           <div class="chart-card__title">EBITDA margin and EBIT margin — historical and market-implied</div>
           <div class="chart-card__sub">% of net sales · 2021A–2025A actual, 2026E–2035E market-implied · actual = solid, market-implied = dashed</div>
           <div id="chart-rv-margins" class="chart-card__body"></div>
@@ -669,7 +669,7 @@ makePage({
 
       <div class="rv-path-note">Reverse valuation path, not base forecast. These figures show what the current price requires, not Valuatum's base case forecast.</div>
 
-      <div class="table-card" style="margin-bottom:3.5mm;">
+      <div class="table-card" style="margin-bottom:2mm;">
         <div class="table-card__title">Required operating path</div>
         <table class="dtable dtable--rv-path">
           <thead>
